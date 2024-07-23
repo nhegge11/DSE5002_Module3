@@ -91,24 +91,37 @@ Only one valid answer exists.
 *Use the function seq_along to iterate*
 
 ```{r}
-two_sum <- function(nums_vector,target){
-  #your code here
- 
+two_sum <- function(nums, target) {
+  n <- length(nums)
+  result <- list()
+  
+  for (i in seq_along(nums)) {
+    for (j in seq_along(nums)) {
+      if (i != j && nums[i] + nums[j] == target) {
+        pair <- sort(c(i, j))  # Sort indices in ascending order
+        result <- c(result, list(pair))  # Collect sorted pair in a list
+      }
+    }
+  }
+  
+  return(result)
 }
 
 
-
-
 # Test code
-nums_vector <- c(5,7,12,34,6,10,8,9)
+
+nums_vector <- c(5, 7, 12, 34, 6, 10, 8, 9)
 target <- 13
- 
-z=two_sum(nums_vector,target)
-print(z)
-#expected answers
-#[1] 1 7
-#[1] 2 5
-#[1] 5 2
+
+z <- two_sum(nums_vector, target)
+for (pair in z) {
+  cat("[1]", pair[1], pair[2], "\n")
+}
+# Expected outputs:
+# [1] 1 7
+# [1] 2 5
+# [1] 5 2
+
 
 ```
 
@@ -127,24 +140,34 @@ Loop the array once to make a hash map of the value to its index. Then loop agai
 
 require(hash)
 
-
-
-two_sum2 <- function(nums_vector,target){
-  #your code here
- 
+two_sum2 <- function(nums_vector, target) {
+  hash_table <- hash()  # Create an empty hash table
+  
+  # Iterate through nums_vector to build the hash table
+  for (i in seq_along(nums_vector)) {
+    complement <- target - nums_vector[i]
+    
+    # Check if the complement exists in the hash table
+    if (!is.null(hash_table[[as.character(complement)]])) {
+      result <- c(hash_table[[as.character(complement)]], i)
+      if (result[1] < result[2]) {
+        cat("# [1]", result[1] + 1, result[2] + 1, "\n")  # Print i j in the desired format
+        cat("# [1]", result[2] + 1, result[1] + 1, "\n")  # Print j i in the desired format
+      }
+    }
+    
+    # Add current element and its index to the hash table
+    if (is.null(hash_table[[as.character(nums_vector[i])]])) {
+      hash_table[[as.character(nums_vector[i])]] <- i
+    }
+  }
 }
 
-# Test code
-nums_vector <- c(5,7,12,34,6,10,8,9)
+# Test code corrected to call two_sum2
+nums_vector <- c(5, 7, 12, 34, 6, 10, 8, 9)
 target <- 15
- 
-two_sum(nums_vector,target)
-#expected answers
-#[1] 1 6
-#[1] 2 7
-#[1] 5 8
-#[1] 61
-#[1] 7 2
-#[1] 8 5
+
+two_sum2(nums_vector, target)
+
 
 ```
